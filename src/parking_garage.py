@@ -7,7 +7,10 @@ try:
     import RPi.GPIO as GPIO
     import SDL_DS3231
     DEPLOYMENT = True
-except:
+except (ImportError, ModuleNotFoundError):
+    import sys
+    import os
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
     import mock.GPIO as GPIO
     import mock.SDL_DS3231 as SDL_DS3231
 
@@ -39,8 +42,7 @@ class ParkingGarage:
         self.red_light_on = False
 
     def check_occupancy(self, pin: int) -> bool:
-        # To be implemented
-        pass
+        return GPIO.input(pin)
 
     def get_number_occupied_spots(self) -> int:
         # To be implemented
