@@ -41,8 +41,8 @@ class TestParkingGarage(TestCase):
 
     @patch.object(SDL_DS3231, "read_datetime")
     def test_calculate_parking_fee_in_weekend(self, rtc: Mock):
-        rtc.return_value = datetime(2025, 22, 20, 15, 30)
+        rtc.return_value = datetime(2025, 12, 20, 15, 30)
         garage = ParkingGarage()
-        entry_time = datetime(2025, 22, 20, 12, 30)
+        entry_time = datetime(2025, 12, 20, 12, 30)
         fee = garage.calculate_parking_fee(entry_time)
         self.assertEqual(9.375, fee)
