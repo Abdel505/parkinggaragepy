@@ -60,3 +60,11 @@ class TestParkingGarage(TestCase):
         garage.close_garage_door()
         garage.door_open = False
         self.assertFalse(garage.door_open)
+
+    @patch.object(GPIO, "output")
+    def test_turn_on_red_light(self, light: Mock):
+        garage = ParkingGarage()
+        garage.turn_on_red_light()
+        garage.red_light_on = True
+        self.assertTrue(garage.red_light_on)
+        light.assert_called_with(garage.LED_PIN, True)
