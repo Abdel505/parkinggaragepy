@@ -58,7 +58,14 @@ class ParkingGarage:
     def calculate_parking_fee(self, entry_time: datetime) -> float:
         exit_time = self.rtc.read_datetime()
         hours = exit_time.hour - entry_time.hour
-        return hours * 2.50
+        if exit_time.minute < entry_time.minute:
+            hours += 1
+        day = entry_time.weekday()
+        fee = hours * 2.5
+        if day in [5, 6]:  # Saturday or Sunday
+            fee *= 1.25
+        return fee
+
     
     def open_garage_door(self) -> None:
         # To be implemented
