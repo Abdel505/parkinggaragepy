@@ -46,3 +46,10 @@ class TestParkingGarage(TestCase):
         entry_time = datetime(2025, 12, 20, 12, 30)
         fee = garage.calculate_parking_fee(entry_time)
         self.assertEqual(9.375, fee)
+
+    @patch.object(ParkingGarage, "change_servo_angle")  #Observe indirect OUtput which is the call to change_servo_angle
+    def test_open_garage_door(self, motor: Mock):
+        garage = ParkingGarage()
+        garage.open_garage_door()
+        self.assertTrue(garage.door_open)  # Direct output is the door_open attribute
+        motor.assert_called_with(12)  # Indirect output is the call to change_servo_angle
