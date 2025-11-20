@@ -31,10 +31,10 @@ class TestParkingGarage(TestCase):
         number_occupied_spots = garage.get_number_occupied_spots()
         self.assertEqual(2, number_occupied_spots)
 
-    @patch.object(GPIO, "input")
+    @patch.object(SDL_DS3231, "read_datetime")
     def test_calculate_parking_fee(self, rtc: Mock):
-        rtc.return_value = datetime(2025, 11, 20, 15, 24)
+        rtc.return_value = datetime(2025, 11, 20, 15, 30)
         garage = ParkingGarage()
         entry_time = datetime(2025, 11, 20, 12, 30)
         fee = garage.calculate_parking_fee(entry_time)
-        self.assertEqual(7.50, fee)
+        self.assertEqual(7.5, fee)
