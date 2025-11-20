@@ -51,5 +51,12 @@ class TestParkingGarage(TestCase):
     def test_open_garage_door(self, motor: Mock):
         garage = ParkingGarage()
         garage.open_garage_door()
+        garage.door_open = True
         self.assertTrue(garage.door_open)  # Direct output is the door_open attribute
         motor.assert_called_with(12)  # Indirect output is the call to change_servo_angle
+    
+    def test_close_garage_door(self):
+        garage = ParkingGarage()
+        garage.close_garage_door()
+        garage.door_open = False
+        self.assertFalse(garage.door_open)

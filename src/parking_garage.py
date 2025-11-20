@@ -73,8 +73,8 @@ class ParkingGarage:
 
 
     def close_garage_door(self) -> None:
-        # To be implemented
-        pass
+        self.change_servo_angle(2)  # 2% duty cycle corresponds to 0 degrees
+        self.door_open = False
 
     def turn_on_red_light(self) -> None:
         # To be implemented
