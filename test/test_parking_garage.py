@@ -13,20 +13,21 @@ from src.parking_garage import ParkingGarageError
 
 class TestParkingGarage(TestCase):
 
-    @patch.object(GPIO, "input")
-    def test_check_occupancy_true(self, distance_sensor: Mock):
-        # This is an example of test where I want to mock the GPIO.input() function
-        distance_sensor.return_value = True
+    @patch.object(GPIO, "input") 
+    # it will use the mock instead of the real method
+    def test_check_occupancy_true(self, distance_sensor: Mock):  
+        distance_sensor.return_value = True 
         garage = ParkingGarage()
-        outcome = garage.check_occupancy(ParkingGarage.INFRARED_PIN1)
-        self.assertTrue(outcome)
+        outcome = garage.check_occupancy(garage.INFRARED_PIN2)
+        self.assertTrue(outcome)# check that outcome is True if False test fails
+
     def test_check_occupancy_raises_error(self):
         garage = ParkingGarage()
         self.assertRaises(ParkingGarageError, garage.check_occupancy, garage.LED_PIN)
 
-    @patch.object(GPIO, "input")
-    def test_get_number_occupied_spots(self, distance_sensor: Mock):
-        distance_sensor.side_effect = [True, False, True] 
+    @patch.object(GPIO, "input") 
+    def test_check_number_occupied_spots_no_occupied(self, distance_sensor: Mock):
+        distance_sensor.side_effect = [True, True, False]
         garage = ParkingGarage()
         number_occupied_spots = garage.get_number_occupied_spots()
         self.assertEqual(2, number_occupied_spots)
@@ -38,12 +39,12 @@ class TestParkingGarage(TestCase):
         entry_time = datetime(2025, 11, 20, 12, 30)
         fee = garage.calculate_parking_fee(entry_time)
         self.assertEqual(7.5, fee)
-
+                                    
     @patch.object(SDL_DS3231, "read_datetime")
-    def test_calculate_parking_fee_in_weekend(self, rtc: Mock):
-        rtc.return_value = datetime(2025, 12, 20, 15, 30)
+    def test_calcuate_parking_fee_in_weekend(self, rtc: Mock):
         garage = ParkingGarage()
-        entry_time = datetime(2025, 12, 20, 12, 30)
+        rtc.return_value = datetime(2025, 11, 22, 15, 30)
+        entry_time = datetime(2025, 11, 22, 12, 30)
         fee = garage.calculate_parking_fee(entry_time)
         self.assertEqual(9.375, fee)
 
