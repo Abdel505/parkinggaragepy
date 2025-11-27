@@ -48,24 +48,34 @@ class TestParkingGarage(TestCase):
         fee = garage.calculate_parking_fee(entry_time)
         self.assertEqual(9.375, fee)
 
-    @patch.object(ParkingGarage, "change_servo_angle")  #Observe indirect OUtput which is the call to change_servo_angle
-    def test_open_garage_door(self, motor: Mock):
+    @patch.object(ParkingGarage, "change_servo_angle")
+    def test_open_garage_door(self, motor:Mock):
         garage = ParkingGarage()
         garage.open_garage_door()
         garage.door_open = True
-        self.assertTrue(garage.door_open)  # Direct output is the door_open attribute
-        motor.assert_called_with(12)  # Indirect output is the call to change_servo_angle
-    
-    def test_close_garage_door(self):
+        self.assertTrue(garage.door_open)
+        motor.assert_called_with(12)
+        
+    @patch.object(ParkingGarage, "change_servo_angle")
+    def test_close_garage_door(self, motor:Mock):
         garage = ParkingGarage()
         garage.close_garage_door()
         garage.door_open = False
         self.assertFalse(garage.door_open)
+        motor.assert_called_with(2)
 
     @patch.object(GPIO, "output")
     def test_turn_on_red_light(self, light: Mock):
         garage = ParkingGarage()
         garage.turn_on_red_light()
-        garage.red_light_on = True
+        #garage.red_light_on = True
         self.assertTrue(garage.red_light_on)
         light.assert_called_with(garage.LED_PIN, True)
+
+    @patch.object(GPIO, "output")
+    def test_turn_off_red_light(self,light: Mock):
+        garage = ParkingGarage()
+        garage.turn_off_red_light()
+        #garage.red_light_on = True
+        self.assertFalse(garage.red_light_on)
+        light.assert_called_with(garage.LED_PIN, False)
